@@ -16,6 +16,7 @@ exports.NotificationsController = void 0;
 const common_1 = require("@nestjs/common");
 const send_notification_1 = require("../../../application/use-cases/send-notification");
 const create_notification_body_1 = require("../dtos/create-notification-body");
+const notification_view_modul_1 = require("../view-models/notification-view-modul");
 let NotificationsController = class NotificationsController {
     constructor(sendNotification) {
         this.sendNotification = sendNotification;
@@ -27,7 +28,9 @@ let NotificationsController = class NotificationsController {
             content,
             category,
         });
-        return { notification };
+        return {
+            notification: notification_view_modul_1.NotificationViewModel.toHTTP(notification),
+        };
     }
 };
 __decorate([

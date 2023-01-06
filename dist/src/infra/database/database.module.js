@@ -8,12 +8,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DatabaseModule = void 0;
 const common_1 = require("@nestjs/common");
+const notifications_repository_1 = require("../../application/repositories/notifications-repository");
 const prisma_service_1 = require("./prisma/prisma.service");
+const prisma_notifications_repository_1 = require("./prisma/repositories/prisma-notifications-repository");
 let DatabaseModule = class DatabaseModule {
 };
 DatabaseModule = __decorate([
     (0, common_1.Module)({
-        providers: [prisma_service_1.PrismaService],
+        providers: [
+            prisma_service_1.PrismaService,
+            {
+                provide: notifications_repository_1.NotificationsRepository,
+                useClass: prisma_notifications_repository_1.PrismaNotificationsRepository,
+            },
+        ],
+        exports: [
+            notifications_repository_1.NotificationsRepository,
+        ]
     })
 ], DatabaseModule);
 exports.DatabaseModule = DatabaseModule;

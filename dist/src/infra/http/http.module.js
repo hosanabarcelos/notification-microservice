@@ -10,11 +10,12 @@ exports.HttpModule = void 0;
 const common_1 = require("@nestjs/common");
 const send_notification_1 = require("../../application/use-cases/send-notification");
 const notifications_controller_1 = require("./controllers/notifications.controller");
+const database_module_1 = require("../database/database.module");
 let HttpModule = class HttpModule {
 };
 HttpModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
+        imports: [database_module_1.DatabaseModule],
         controllers: [notifications_controller_1.NotificationsController],
         providers: [send_notification_1.SendNotification]
     })
