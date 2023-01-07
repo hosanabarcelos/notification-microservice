@@ -14,12 +14,48 @@ const common_1 = require("@nestjs/common");
 const prisma_notification_mapper_1 = require("../mappers/prisma-notification-mapper");
 const prisma_service_1 = require("../prisma.service");
 let PrismaNotificationsRepository = class PrismaNotificationsRepository {
-    constructor(prismaService) {
-        this.prismaService = prismaService;
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    async findById(notificationId) {
+        const notification = await this.prisma.notification.findUnique({
+            where: {
+                id: notificationId,
+            }
+        });
+        if (!notification) {
+            return null;
+        }
+        return prisma_notification_mapper_1.PrismaNotificationMapper.toDomain(notification);
+    }
+    async findManyByRecipientId(recipientId) {
+        const notifications = await this.prisma.notification.findMany({
+            where: {
+                recipientId,
+            },
+        });
+        return notifications.map(prisma_notification_mapper_1.PrismaNotificationMapper.toDomain);
+    }
+    async countManyRecipientId(recipientId) {
+        const count = await this.prisma.notification.count({
+            where: {
+                recipientId
+            }
+        });
+        return count;
     }
     async create(notification) {
         const raw = prisma_notification_mapper_1.PrismaNotificationMapper.toPrisma(notification);
-        await this.prismaService.notification.create({
+        await this.prisma.notification.create({
+            data: raw,
+        });
+    }
+    async save(notification) {
+        const raw = prisma_notification_mapper_1.PrismaNotificationMapper.toPrisma(notification);
+        await this.prisma.notification.update({
+            where: {
+                id: raw.id,
+            },
             data: raw,
         });
     }
